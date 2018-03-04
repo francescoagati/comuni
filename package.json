@@ -1,0 +1,23 @@
+{
+  "name": "ewfef",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "bravey": "^0.1.5",
+    "csvdata": "^1.4.0",
+    "limdu": "^0.9.4",
+    "natural": "^0.5.6",
+    "normalization": "^1.1.1",
+    "sequelize": "^4.35.1",
+    "simplengrams": "^0.1.2",
+    "sqlite3": "^3.1.13",
+    "underscore": "^1.8.3"
+  }
+}
