@@ -1,6 +1,6 @@
 csv = require 'csvdata'
-Sequelize = require 'sequelize'
-natural = require('natural')
+#Sequelize = require 'sequelize'
+#natural = require('natural')
 normalization = require 'normalization'
 ngram = require 'simplengrams'
 _ = require 'underscore'
@@ -9,14 +9,11 @@ bravey = require 'bravey'
 
 date_reg = new bravey.Language.IT.DateEntityRecognizer("test")
 time_reg = new bravey.Language.IT.TimeEntityRecognizer("test")
-PorterStemmerIt = require('./node_modules/natural/lib/natural/stemmers/porter_stemmer_it');
+#PorterStemmerIt = require('./node_modules/natural/lib/natural/stemmers/porter_stemmer_it');
 load_data = ->
     data = await csv.load './comuni.csv'
-  
 
-    content = for el in data 
-        normalization el.input
-
+    content =  (normalization el.input for el in data) 
     store = content
 
     s = normalization "devo partire domani alle 15 per roma e dopodomani devo prendere un treno per napoli alle 18"
@@ -32,8 +29,9 @@ load_data = ->
     response = []
     for words in [n1,n2,n3,n4]
         for word in words
-          for el in store when el.indexOf(word.join(" ")) == 0 && word.join(" ").length > 3
-            response.push [el,word.join(" ")]
+          word_join = word.join " "
+          for el in store when el.indexOf(word_join) is 0 && word_join.length > 3
+            response.push [el,word_join]
 
     distinct = _.unique response
     
