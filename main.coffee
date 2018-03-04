@@ -16,7 +16,10 @@ load_data = ->
     content =  (normalization el.input for el in data) 
     store = content
 
-    s = normalization "devo partire domani alle 15 per roma e dopodomani devo prendere un treno per napoli alle 18"
+    #s = normalization "devo partire domani alle 15 per trepalle e dopodomani devo prendere un treno per napoli alle 18"
+
+    s = normalization "vorrei prenotare un treno per latina che passa per bologna che parte il 10 marzo alle 20"
+
 
     n1 = ngram s,1
     n2 = ngram s,2
@@ -35,9 +38,23 @@ load_data = ->
 
     distinct = _.unique response
     
-    console.log (words for words in response when words[0] is words[1]) 
-    console.log date_reg.getEntities s
-    console.log time_reg.getEntities s
+
+    for words in distinct when words[0] is words[1] 
+        s = s.replace words[0],"#{words[1]}[#{words[0]}]"
+
+    for entity in date_reg.getEntities s
+        s = s.replace entity.string,"#{entity.string}[#{entity.value}]" 
+
+    for entity in time_reg.getEntities s
+        console.log entity
+        s = s.replace entity.string,"#{entity.string}[#{entity.value}]" 
+
+
+    console.log s
+
+    #console.log (words for words in response when words[0] is words[1]) 
+    #console.log date_reg.getEntities s
+    #console.log time_reg.getEntities s
 #   classifier = new natural.BayesClassifier()
 
 #   for el in data
