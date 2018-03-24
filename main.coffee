@@ -1,3 +1,6 @@
+levelup = require('levelup')
+leveldown = require('leveldown')
+
 csv = require 'csvdata'
 #Sequelize = require 'sequelize'
 #natural = require('natural')
@@ -7,14 +10,19 @@ _ = require 'underscore'
 bravey = require 'bravey'
 
 
+db = levelup(leveldown('./mydb'))
+
+get = (key) -> new Promise (resolve) -> db.get key, (err, response) -> resolve "" + response
+
+
 date_reg = new bravey.Language.IT.DateEntityRecognizer("test")
 time_reg = new bravey.Language.IT.TimeEntityRecognizer("test")
 #PorterStemmerIt = require('./node_modules/natural/lib/natural/stemmers/porter_stemmer_it');
 load_data = ->
-    data = await csv.load './comuni.csv'
+    #data = await csv.load './comuni.csv'
 
-    content =  (normalization el.input for el in data) 
-    store = content
+    #content =  (normalization el.input for el in data) 
+    #store = content
 
     #s = normalization "devo partire domani alle 15 per trepalle e dopodomani devo prendere un treno per napoli alle 18"
 
@@ -30,14 +38,20 @@ load_data = ->
 
 
     response = []
-    for words in [n1,n2,n3,n4]
+    for words in [n1, n2, n3, n4]
         for word in words
           word_join = word.join " "
-          for el in store when el.indexOf(word_join) is 0 && word_join.length > 3
-            response.push [el,word_join]
+          
+          #console.log await get word_join
+          
+          if word_join.length > 3 and await get(word_join) isnt undefined
+            response.push [await get(word_join), word_join]
+          #for el in store when el.indexOf(word_join) is 0 && word_join.length > 3
+          #  response.push [el,word_join]
 
     distinct = _.unique response
     
+    console.log distinct
 
     for words in distinct when words[0] is words[1] 
         s = s.replace words[0],"#{words[1]}[#{words[0]}]"
